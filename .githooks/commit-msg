@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Get message
+MSG=$(cat "${1:?Missing commit message file}")
+
+echo "runing commit message hook..."
+## Getting the right version of scripts
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPTS_BIN=$CURRENT_DIR/scripts/bin_mac # defaults to mac
+
+LNX="Linux"
+
+if [[ $(uname -s) == $LNX ]]; then
+  Info "Linux platform, setting the configs to linux..."
+  SCRIPTS_BIN=$CURRENT_DIR/scripts/bin_lnx # sets to linux
+fi
+
+${SCRIPTS_BIN}/semver --comment "${MSG}" >/dev/null
+
+ERR=$?
+if [ $ERR != 0 ]; then
+    echo "your commit message does not satisfy the semantic version requirements."
+    echo "commit message: ${MSG}"
+    exit 1
+fi
+
+ERR=$?
+if [ $ERR != 0 ]; then
+  echo "something wen wrong while verifying commit message..."
+  exit $ERR 
+fi
+
+exit 0

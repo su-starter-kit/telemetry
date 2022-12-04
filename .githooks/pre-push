@@ -1,0 +1,21 @@
+#!/bin/bash
+RUN_VERSIONING=0
+
+echo "running pre push hook..."
+
+
+# Get current dir
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Run tests
+echo "running tests..."
+go test $CURRENT_DIR/..
+
+# Run versioning if branch is main branch Tag
+CURRENT_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+if [[ $CURRENT_BRANCH == "main" && RUN_VERSIONING == 1 ]]; then
+    echo "versioning..."
+    $CURRENT_DIR/scripts/update_version.sh
+fi
+
+# Run lint
