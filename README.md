@@ -1,6 +1,6 @@
 # Telemetry
 
-Add reference to this package, so that you can log according to the company specifications.
+Add reference to this package, so that you can use telemetry tools compliant to company specifications.
 
 **Note:** This package does not abstract the telemetry, and open telemetry dependency. You will also need to include
 `otel` sdk in your project. Instead, it provides builders functions with boilerplate code to configure meters and tracers.
